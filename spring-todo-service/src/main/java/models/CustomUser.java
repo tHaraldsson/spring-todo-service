@@ -3,28 +3,38 @@ package models;
 
 import jakarta.persistence.*;
 
+
+import java.util.List;
+
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class CustomUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Column(name = "Id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "Email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "Password")
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "role")
+    private String role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks;
 
 
     public CustomUser() {}
 
-    public CustomUser(String email, String password) {
+    public CustomUser(String email, String password, String role) {
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public Long getId() {
@@ -45,5 +55,13 @@ public class CustomUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
