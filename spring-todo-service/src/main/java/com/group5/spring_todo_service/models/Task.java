@@ -1,5 +1,6 @@
 package com.group5.spring_todo_service.models;
 
+import com.group5.spring_todo_service.dto.TaskResponseDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -66,5 +67,12 @@ public class Task {
 
     public void setUser(CustomUser user) {
         this.user = user;
+    }
+
+    public TaskResponseDTO toDTO() {
+
+        return new TaskResponseDTO(
+                id, title, description, isComplete, user.getEmail()
+        );
     }
 }

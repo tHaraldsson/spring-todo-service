@@ -2,6 +2,7 @@ package com.group5.spring_todo_service.controllers;
 
 
 import com.group5.spring_todo_service.dto.CustomUserRegistrationDTO;
+import com.group5.spring_todo_service.dto.TaskResponseDTO;
 import com.group5.spring_todo_service.repositories.CustomUserRepository;
 import com.group5.spring_todo_service.services.CustomUserService;
 import jakarta.validation.Valid;
@@ -28,15 +29,17 @@ public class CustomUserController {
         this.customUserService = customUserService;
     }
 
-    @GetMapping("/gettasksbyid/{id}")
-    public ResponseEntity<List<Task>> getTasksByUserId(@PathVariable Long id){
-       List<Task> tasks = customUserService.getTasksByUserId(id);
+    @GetMapping("/gettasksbyuserid/{id}")
+    public ResponseEntity<List<TaskResponseDTO>> getTasksByUserId(@PathVariable Long id) {
+        List<TaskResponseDTO> tasks = customUserService.getTasksByUserId(id);
 
-        if (tasks!=null) {
-            return  ResponseEntity.ok(tasks);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(tasks);
     }
+
 
     @PostMapping("/createuser")
     public ResponseEntity<CustomUser> createUser(@RequestBody @Valid CustomUserRegistrationDTO dto) {
