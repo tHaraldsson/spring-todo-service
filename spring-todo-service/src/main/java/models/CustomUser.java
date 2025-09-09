@@ -29,12 +29,14 @@ public class CustomUser {
     private List<Task> tasks;
 
 
-    public CustomUser() {}
+    public CustomUser() {
+    }
 
-    public CustomUser(String email, String password, String role) {
+    public CustomUser(String email, String password, String role, List<Task> tasks) {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.tasks = tasks;
     }
 
     public Long getId() {
@@ -63,5 +65,13 @@ public class CustomUser {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }
