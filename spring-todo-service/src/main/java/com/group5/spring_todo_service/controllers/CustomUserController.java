@@ -42,7 +42,7 @@ public class CustomUserController {
     public ResponseEntity<CustomUser> createUser(@RequestBody @Valid CustomUserRegistrationDTO dto) {
 
         CustomUser saveUser = customUserService.createUser(dto);
-        return ResponseEntity.ok(saveUser);
+        return ResponseEntity.status(201).body(saveUser);
 
     }
 }
