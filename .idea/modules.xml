@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/projektarbete-to-do.iml" filepath="$PROJECT_DIR$/.idea/projektarbete-to-do.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-todo-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-todo-service.main.iml" />
     </modules>
   </component>
 </project>
