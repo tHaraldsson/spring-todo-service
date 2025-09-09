@@ -5,14 +5,13 @@ import com.group5.spring_todo_service.dto.CustomUserRegistrationDTO;
 import com.group5.spring_todo_service.repositories.CustomUserRepository;
 import com.group5.spring_todo_service.services.CustomUserService;
 import jakarta.validation.Valid;
-import models.CustomUser;
-import models.Task;
+import com.group5.spring_todo_service.models.CustomUser;
+import com.group5.spring_todo_service.models.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController

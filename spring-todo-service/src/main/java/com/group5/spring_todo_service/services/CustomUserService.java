@@ -2,8 +2,8 @@ package com.group5.spring_todo_service.services;
 
 import com.group5.spring_todo_service.dto.CustomUserRegistrationDTO;
 import com.group5.spring_todo_service.repositories.CustomUserRepository;
-import models.CustomUser;
-import models.Task;
+import com.group5.spring_todo_service.models.CustomUser;
+import com.group5.spring_todo_service.models.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

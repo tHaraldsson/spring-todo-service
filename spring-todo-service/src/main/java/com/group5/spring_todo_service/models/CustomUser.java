@@ -1,4 +1,4 @@
-package models;
+package com.group5.spring_todo_service.models;
 
 
 import jakarta.persistence.*;
