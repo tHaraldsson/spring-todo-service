@@ -5,6 +5,7 @@ public record TaskResponseDTO(
         String title,
         String description,
         boolean isComplete,
+        boolean deleted,
         String userEmail
 ) {
 }

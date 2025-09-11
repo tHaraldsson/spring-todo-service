@@ -1,5 +1,6 @@
 package com.group5.spring_todo_service.controllers;
 
+import com.group5.spring_todo_service.dto.TaskPatchDTO;
 import com.group5.spring_todo_service.dto.TaskRequestDTO;
 import com.group5.spring_todo_service.dto.TaskResponseDTO;
 import com.group5.spring_todo_service.models.CustomUser;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/tasks")
@@ -37,11 +40,34 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(task.toDTO());
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Task> getTask(@PathVariable Long id) {
-//        return taskService.getTaskById(id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
+    @PatchMapping("/patchtask")
+    public ResponseEntity<TaskResponseDTO> patchTask(
+
+            @RequestBody @Valid TaskPatchDTO request,
+            @RequestHeader String email,
+            @RequestHeader String password) {
+
+        customUserService.authenticate(email, password).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        );
+
+        Task task = taskService.patchTask(request);
+
+        return ResponseEntity.ok(task.toDTO());
+    }
+
+    @GetMapping("/mytasks")
+    public ResponseEntity<List<TaskResponseDTO>> getMyTasks(
+            @RequestHeader String email,
+            @RequestHeader String password) {
+
+        CustomUser user = customUserService.authenticate(email, password).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        );
+        List<TaskResponseDTO> tasks = taskService.getActiveTasksForUser(user.getId());
+
+        return ResponseEntity.ok(tasks);
+    }
+
 }
 

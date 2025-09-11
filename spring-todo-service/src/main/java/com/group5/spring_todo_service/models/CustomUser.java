@@ -29,6 +29,8 @@ public class CustomUser {
     private List<Task> tasks;
 
 
+
+
     public CustomUser() {
     }
 
@@ -39,9 +41,6 @@ public class CustomUser {
         this.tasks = tasks;
     }
 
-    public CustomUser(Long id) {
-        this.id = id;
-    }
 
     public Long getId() {
         return id;

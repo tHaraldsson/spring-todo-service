@@ -36,6 +36,7 @@ public class CustomUserService {
                                 task.getTitle(),
                                 task.getDescription(),
                                 task.isComplete(),
+                                task.isDeleted(),
                                 task.getUser().getEmail()
                         ))
                         .toList()

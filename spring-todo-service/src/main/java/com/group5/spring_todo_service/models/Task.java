@@ -20,6 +20,9 @@ public class Task {
     @Column(name = "isComplete")
     private boolean isComplete;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private CustomUser user;
@@ -31,6 +34,14 @@ public class Task {
         this.description = description;
         this.isComplete = isComplete;
         this.user = user;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public Long getId() {
@@ -72,7 +83,7 @@ public class Task {
     public TaskResponseDTO toDTO() {
 
         return new TaskResponseDTO(
-                id, title, description, isComplete, user.getEmail()
+                id, title, description, isComplete, deleted, user.getEmail()
         );
     }
 }
