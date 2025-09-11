@@ -39,4 +39,4 @@ out/
 ### ENV VARIABLES ###
 
 .gitignore
-/src/.env
+*.env
