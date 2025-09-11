@@ -2,13 +2,11 @@ package com.group5.spring_todo_service.controllers;
 
 
 import com.group5.spring_todo_service.dto.CustomUserRegistrationDTO;
-import com.group5.spring_todo_service.dto.TaskRequestDTO;
 import com.group5.spring_todo_service.dto.TaskResponseDTO;
 import com.group5.spring_todo_service.repositories.CustomUserRepository;
 import com.group5.spring_todo_service.services.CustomUserService;
 import jakarta.validation.Valid;
 import com.group5.spring_todo_service.models.CustomUser;
-import com.group5.spring_todo_service.models.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

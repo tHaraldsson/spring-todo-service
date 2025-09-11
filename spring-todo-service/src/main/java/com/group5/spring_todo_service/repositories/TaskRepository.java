@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findByUserIdAndDeletedFalse(Long userId);
+    List<Task> findByUserIdAndDeletedTrue(Long userId);
 }
