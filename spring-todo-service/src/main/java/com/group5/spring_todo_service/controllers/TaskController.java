@@ -7,7 +7,6 @@ import com.group5.spring_todo_service.models.CustomUser;
 import com.group5.spring_todo_service.models.Task;
 import com.group5.spring_todo_service.repositories.TaskRepository;
 import com.group5.spring_todo_service.services.AuthenticationService;
-import com.group5.spring_todo_service.services.CustomUserService;
 import com.group5.spring_todo_service.services.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
