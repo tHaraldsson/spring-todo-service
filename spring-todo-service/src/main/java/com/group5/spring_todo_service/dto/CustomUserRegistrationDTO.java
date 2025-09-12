@@ -11,10 +11,8 @@ public record CustomUserRegistrationDTO(
         String email,
 
         @NotBlank(message = "Password must not be empty!")
-        @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d).{8,}$", message = "The password must contain at least 8 chars, a capital letter and a number")
-        String password,
-
-        @NotBlank(message = "Role cannot be empty!")
-        String role
+        @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)[A-Za-z0-9!@#$%^&*()_+=-]{8,}$",
+                message = "1. Password must be at least 8 chars 2. Must contain a capital letter and a number. 3. May only contain A-Z, !@#$%^&*()_+=-")
+        String password
 
 ) {}

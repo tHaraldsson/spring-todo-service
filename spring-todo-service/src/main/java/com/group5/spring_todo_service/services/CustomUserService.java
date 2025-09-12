@@ -48,7 +48,7 @@ public class CustomUserService {
     CustomUser savedUser = new CustomUser();
         savedUser.setEmail(dto.email());
         savedUser.setPassword(dto.password());
-        savedUser.setRole(dto.role());
+        savedUser.setRole("USER");
         savedUser.setTasks(new ArrayList<>());
         return customUserRepository.save(savedUser);
     }
