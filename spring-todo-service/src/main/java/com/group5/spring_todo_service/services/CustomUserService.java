@@ -21,11 +21,6 @@ public class CustomUserService {
         this.customUserRepository = customUserRepository;
     }
 
-    public Optional<CustomUser> authenticate (String email, String password) {
-
-        return customUserRepository.findCustomUserByEmail(email)
-                .filter(customUser -> customUser.getPassword().equals(password));
-    }
 
     public List<TaskResponseDTO> getTasksByUserId(Long userId) {
 

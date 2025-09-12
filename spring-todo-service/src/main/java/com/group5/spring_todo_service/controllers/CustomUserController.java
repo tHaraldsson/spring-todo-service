@@ -3,15 +3,13 @@ package com.group5.spring_todo_service.controllers;
 
 import com.group5.spring_todo_service.dto.CustomUserRegistrationDTO;
 import com.group5.spring_todo_service.dto.TaskResponseDTO;
-import com.group5.spring_todo_service.repositories.CustomUserRepository;
+import com.group5.spring_todo_service.services.AuthenticationService;
 import com.group5.spring_todo_service.services.CustomUserService;
 import jakarta.validation.Valid;
 import com.group5.spring_todo_service.models.CustomUser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
 
@@ -20,15 +18,15 @@ import java.util.List;
 @RequestMapping("/users")
 public class CustomUserController {
 
-    @Autowired
+
     private final CustomUserService customUserService;
-    @Autowired
-    private CustomUserRepository customUserRepository;
+    private final AuthenticationService authenticationService;
 
-
-    public CustomUserController(CustomUserService customUserService) {
+    public CustomUserController(CustomUserService customUserService, AuthenticationService authenticationService) {
         this.customUserService = customUserService;
+        this.authenticationService = authenticationService;
     }
+
 
     @GetMapping("/gettasksbyuserid/{id}")
     public ResponseEntity<List<TaskResponseDTO>> getTasksByUserId(
@@ -36,9 +34,7 @@ public class CustomUserController {
             @RequestHeader String email,
             @RequestHeader String password) {
 
-        customUserService.authenticate(email, password).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        );
+        authenticationService.authenticateOrThrow(email, password);
 
             List<TaskResponseDTO> tasks = customUserService.getTasksByUserId(id);
 
