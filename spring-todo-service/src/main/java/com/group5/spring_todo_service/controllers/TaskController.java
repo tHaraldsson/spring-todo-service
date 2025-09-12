@@ -51,7 +51,13 @@ public class TaskController {
             @RequestHeader String email,
             @RequestHeader String password) {
 
-        authenticationService.authenticateOrThrow(email, password);
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+
+        Optional<Task> optionalTask = taskRepository.findById(request.id());
+
+        if (!(user.equals(optionalTask.get().getUser()))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         Task task = taskService.patchTask(request);
 
@@ -107,7 +113,13 @@ public class TaskController {
             @RequestHeader String email,
             @RequestHeader String password
     ) {
-        authenticationService.authenticateOrThrow(email, password);
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+
+        Optional<Task> optionalTask = taskRepository.findById(id);
+
+        if (!(user.equals(optionalTask.get().getUser()))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         taskService.hardDeleteTask(id);
         return ResponseEntity.noContent().build();
@@ -119,7 +131,13 @@ public class TaskController {
             @RequestHeader String email,
             @RequestHeader String password) {
 
-        authenticationService.authenticateOrThrow(email, password);
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+
+        Optional<Task> optionalTask = taskRepository.findById(id);
+
+        if (!(user.equals(optionalTask.get().getUser()))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         Task task = taskService.restoreTask(id);
         return ResponseEntity.ok(task.toDTO());
