@@ -67,6 +67,10 @@ public class CustomUserService {
         return customUserRepository.save(savedUser);
     }
 
+    public void deleteUser(Long userId) {
+        CustomUser user = customUserRepository.findById(userId).orElseThrow(() -> new RuntimeException("User with id " + userId + " not found"));;
 
+        customUserRepository.deleteById(userId);
+    }
 
 }

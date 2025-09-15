@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -79,4 +80,20 @@ public class CustomUserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saveUser.toDTO());
 
     }
+
+    @DeleteMapping("/admin/deleteuser/{id}")
+    public ResponseEntity<Map<String, String>> deleteUser(
+            @PathVariable Long id,
+            @RequestHeader String email,
+            @RequestHeader String password
+    ) {
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+        if (!"ADMIN".equals(user.getRole())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        customUserService.deleteUser(id);
+        return ResponseEntity.ok(Map.of("message", "User with id " + id + " deleted successfully"));
+    }
+
 }
