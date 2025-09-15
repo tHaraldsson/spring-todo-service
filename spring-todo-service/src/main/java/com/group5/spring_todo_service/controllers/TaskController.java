@@ -6,16 +6,17 @@ import com.group5.spring_todo_service.dto.TaskResponseDTO;
 import com.group5.spring_todo_service.models.CustomUser;
 import com.group5.spring_todo_service.models.Task;
 import com.group5.spring_todo_service.repositories.TaskRepository;
-import com.group5.spring_todo_service.services.CustomUserService;
+import com.group5.spring_todo_service.services.AuthenticationService;
 import com.group5.spring_todo_service.services.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -23,12 +24,12 @@ import java.util.Optional;
 public class TaskController {
 
     private final TaskService taskService;
-    private final CustomUserService customUserService;
+    private final AuthenticationService authenticationService;
     private final TaskRepository taskRepository;
 
-    public TaskController(TaskService taskService, CustomUserService customUserService, TaskRepository taskRepository) {
+    public TaskController(TaskService taskService, AuthenticationService authenticationService, TaskRepository taskRepository) {
         this.taskService = taskService;
-        this.customUserService = customUserService;
+        this.authenticationService = authenticationService;
         this.taskRepository = taskRepository;
     }
 
@@ -38,9 +39,8 @@ public class TaskController {
             @RequestHeader String email,
             @RequestHeader String password) {
 
-        CustomUser user = customUserService.authenticate(email, password).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        );
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+
         Task task = taskService.createTask(request, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(task.toDTO());
     }
@@ -52,9 +52,13 @@ public class TaskController {
             @RequestHeader String email,
             @RequestHeader String password) {
 
-        customUserService.authenticate(email, password).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        );
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+
+        Optional<Task> optionalTask = taskRepository.findById(request.id());
+
+        if (!(user.equals(optionalTask.get().getUser()))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         Task task = taskService.patchTask(request);
 
@@ -63,25 +67,32 @@ public class TaskController {
 
     @GetMapping("/mytasks")
     public ResponseEntity<List<TaskResponseDTO>> getMyTasks(
+            @RequestParam(required = false) Boolean isComplete,
             @RequestHeader String email,
             @RequestHeader String password) {
 
-        CustomUser user = customUserService.authenticate(email, password).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        );
-        List<TaskResponseDTO> tasks = taskService.getActiveTasksForUser(user.getId());
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+        List<TaskResponseDTO> tasks;
+
+        if (isComplete == null) {
+            tasks = taskService.getActiveTasksForUser(user.getId());
+        } else if (Boolean.FALSE.equals(isComplete)) {
+            tasks = taskService.getNotCompletedTasksForUser(user.getId());
+        } else {
+            tasks = taskService.getCompletedTasksForUser(user.getId());
+        }
 
         return ResponseEntity.ok(tasks);
     }
+
 
     @GetMapping("/mytrashcan")
     public ResponseEntity<List<TaskResponseDTO>> getMyTrashCan(
             @RequestHeader String email,
             @RequestHeader String password) {
 
-        CustomUser user = customUserService.authenticate(email, password).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        );
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+
         List<TaskResponseDTO> tasks = taskService.getDeletedTasksForUser(user.getId());
 
         return ResponseEntity.ok(tasks);
@@ -93,9 +104,7 @@ public class TaskController {
             @RequestHeader String email,
             @RequestHeader String password) {
 
-        CustomUser user = customUserService.authenticate(email, password).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        );
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
 
         Optional<Task> optionalTask = taskRepository.findById(id);
 
@@ -109,17 +118,21 @@ public class TaskController {
     }
 
     @DeleteMapping("/harddelete/{id}")
-    public ResponseEntity<Void> hardDelete(
+    public ResponseEntity<Map<String, String>> hardDelete(
             @PathVariable Long id,
             @RequestHeader String email,
             @RequestHeader String password
     ) {
-        customUserService.authenticate(email, password).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        );
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+
+        Optional<Task> optionalTask = taskRepository.findById(id);
+
+        if (!(user.equals(optionalTask.get().getUser()))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         taskService.hardDeleteTask(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of("message", "Task with id " + id + " deleted successfully"));
     }
 
     @PatchMapping("/restoretask/{id}")
@@ -128,9 +141,13 @@ public class TaskController {
             @RequestHeader String email,
             @RequestHeader String password) {
 
-        customUserService.authenticate(email, password).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        );
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+
+        Optional<Task> optionalTask = taskRepository.findById(id);
+
+        if (!(user.equals(optionalTask.get().getUser()))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         Task task = taskService.restoreTask(id);
         return ResponseEntity.ok(task.toDTO());

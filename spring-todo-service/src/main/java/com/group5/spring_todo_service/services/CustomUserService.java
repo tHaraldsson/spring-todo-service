@@ -21,11 +21,6 @@ public class CustomUserService {
         this.customUserRepository = customUserRepository;
     }
 
-    public Optional<CustomUser> authenticate (String email, String password) {
-
-        return customUserRepository.findCustomUserByEmail(email)
-                .filter(customUser -> customUser.getPassword().equals(password));
-    }
 
     public List<TaskResponseDTO> getTasksByUserId(Long userId) {
 
@@ -53,11 +48,29 @@ public class CustomUserService {
     CustomUser savedUser = new CustomUser();
         savedUser.setEmail(dto.email());
         savedUser.setPassword(dto.password());
-        savedUser.setRole(dto.role());
+        savedUser.setRole("USER");
         savedUser.setTasks(new ArrayList<>());
         return customUserRepository.save(savedUser);
     }
 
+    public CustomUser createAdmin(CustomUserRegistrationDTO dto) {
 
+        if (customUserRepository.existsByEmail(dto.email())){
+            throw new IllegalArgumentException("Email already exists");
+        }
+
+        CustomUser savedUser = new CustomUser();
+        savedUser.setEmail(dto.email());
+        savedUser.setPassword(dto.password());
+        savedUser.setRole("ADMIN");
+        savedUser.setTasks(new ArrayList<>());
+        return customUserRepository.save(savedUser);
+    }
+
+    public void deleteUser(Long userId) {
+        CustomUser user = customUserRepository.findById(userId).orElseThrow(() -> new RuntimeException("User with id " + userId + " not found"));;
+
+        customUserRepository.deleteById(userId);
+    }
 
 }

@@ -66,6 +66,36 @@ public class TaskService {
 
     }
 
+    public List<TaskResponseDTO> getNotCompletedTasksForUser(Long userId) {
+
+        return taskRepository.findByUserIdAndIsCompleteAndDeletedFalse(userId, false).stream()
+                .map(task -> new TaskResponseDTO(
+                        task.getId(),
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.isComplete(),
+                        task.isDeleted(),
+                        task.getUser().getEmail()
+                ))
+                .toList();
+
+    }
+
+    public List<TaskResponseDTO> getCompletedTasksForUser(Long userId) {
+
+        return taskRepository.findByUserIdAndIsCompleteAndDeletedFalse(userId, true).stream()
+                .map(task -> new TaskResponseDTO(
+                        task.getId(),
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.isComplete(),
+                        task.isDeleted(),
+                        task.getUser().getEmail()
+                ))
+                .toList();
+
+    }
+
     public List<TaskResponseDTO> getDeletedTasksForUser(Long userId) {
         return taskRepository.findByUserIdAndDeletedTrue(userId).stream()
                 .map(task -> new TaskResponseDTO(
