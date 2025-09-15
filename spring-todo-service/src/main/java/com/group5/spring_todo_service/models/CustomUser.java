@@ -1,6 +1,8 @@
 package com.group5.spring_todo_service.models;
 
 
+import com.group5.spring_todo_service.dto.CustomUserResponseDTO;
+import com.group5.spring_todo_service.dto.TaskResponseDTO;
 import jakarta.persistence.*;
 
 
@@ -76,5 +78,12 @@ public class CustomUser {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public CustomUserResponseDTO toDTO() {
+
+        return new CustomUserResponseDTO(
+                id, email, role
+        );
     }
 }
