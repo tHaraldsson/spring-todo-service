@@ -110,4 +110,25 @@ public class CustomUserController {
         return ResponseEntity.ok(Map.of("message", "User with id " + id + " deleted successfully"));
     }
 
+
+    @GetMapping("/admin/getallusers")
+    public ResponseEntity<List<CustomUserResponseDTO>> getAllUsers(
+            @RequestHeader String email,
+            @RequestHeader String password) {
+
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+
+        if (!"ADMIN".equals(user.getRole())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        List<CustomUserResponseDTO> users = customUserService.getAllUsers();
+
+        if (users.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(users);
+    }
+
 }

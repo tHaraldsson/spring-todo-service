@@ -2,6 +2,7 @@ package com.group5.spring_todo_service.services;
 
 import com.group5.spring_todo_service.dto.CustomUserPatchDTO;
 import com.group5.spring_todo_service.dto.CustomUserRequestDTO;
+import com.group5.spring_todo_service.dto.CustomUserResponseDTO;
 import com.group5.spring_todo_service.dto.TaskResponseDTO;
 import com.group5.spring_todo_service.repositories.CustomUserRepository;
 import com.group5.spring_todo_service.models.CustomUser;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -89,4 +91,14 @@ public class CustomUserService {
 
     }
 
+    public List<CustomUserResponseDTO> getAllUsers() {
+        return customUserRepository.findAll().
+                stream()
+                .map(user -> new CustomUserResponseDTO(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getRole()
+                ))
+                .toList();
+    }
 }
