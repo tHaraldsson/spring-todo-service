@@ -9,12 +9,14 @@ import com.group5.spring_todo_service.repositories.TaskRepository;
 import com.group5.spring_todo_service.services.AuthenticationService;
 import com.group5.spring_todo_service.services.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -65,15 +67,24 @@ public class TaskController {
 
     @GetMapping("/mytasks")
     public ResponseEntity<List<TaskResponseDTO>> getMyTasks(
+            @RequestParam(required = false) Boolean isComplete,
             @RequestHeader String email,
             @RequestHeader String password) {
 
         CustomUser user = authenticationService.authenticateOrThrow(email, password);
+        List<TaskResponseDTO> tasks;
 
-        List<TaskResponseDTO> tasks = taskService.getActiveTasksForUser(user.getId());
+        if (isComplete == null) {
+            tasks = taskService.getActiveTasksForUser(user.getId());
+        } else if (Boolean.FALSE.equals(isComplete)) {
+            tasks = taskService.getNotCompletedTasksForUser(user.getId());
+        } else {
+            tasks = taskService.getCompletedTasksForUser(user.getId());
+        }
 
         return ResponseEntity.ok(tasks);
     }
+
 
     @GetMapping("/mytrashcan")
     public ResponseEntity<List<TaskResponseDTO>> getMyTrashCan(
@@ -107,7 +118,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/harddelete/{id}")
-    public ResponseEntity<Void> hardDelete(
+    public ResponseEntity<Map<String, String>> hardDelete(
             @PathVariable Long id,
             @RequestHeader String email,
             @RequestHeader String password
@@ -121,7 +132,7 @@ public class TaskController {
         }
 
         taskService.hardDeleteTask(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of("message", "Task with id " + id + " deleted successfully"));
     }
 
     @PatchMapping("/restoretask/{id}")
