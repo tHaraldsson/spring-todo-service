@@ -1,7 +1,8 @@
 package com.group5.spring_todo_service.controllers;
 
 
-import com.group5.spring_todo_service.dto.CustomUserRegistrationDTO;
+import com.group5.spring_todo_service.dto.CustomUserPatchDTO;
+import com.group5.spring_todo_service.dto.CustomUserRequestDTO;
 import com.group5.spring_todo_service.dto.CustomUserResponseDTO;
 import com.group5.spring_todo_service.dto.TaskResponseDTO;
 import com.group5.spring_todo_service.services.AuthenticationService;
@@ -54,7 +55,7 @@ public class CustomUserController {
 
 
     @PostMapping("/createuser")
-    public ResponseEntity<CustomUserResponseDTO> createUser(@RequestBody @Valid CustomUserRegistrationDTO dto) {
+    public ResponseEntity<CustomUserResponseDTO> createUser(@RequestBody @Valid CustomUserRequestDTO dto) {
 
         CustomUser saveUser = customUserService.createUser(dto);
 
@@ -63,9 +64,22 @@ public class CustomUserController {
 
     }
 
+    @PatchMapping("/patchuser")
+    public ResponseEntity<CustomUserResponseDTO> patchUser(
+            @RequestBody @Valid CustomUserPatchDTO dto,
+            @RequestHeader String email,
+            @RequestHeader String password) {
+
+        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+
+        CustomUser updatedUser = customUserService.updateUser(dto, user.getId());
+
+        return ResponseEntity.ok(updatedUser.toDTO());
+    }
+
     @PostMapping("/admin/createadmin")
     public ResponseEntity<CustomUserResponseDTO> createAdmin(
-            @RequestBody @Valid CustomUserRegistrationDTO dto,
+            @RequestBody @Valid CustomUserRequestDTO dto,
             @RequestHeader String email,
             @RequestHeader String password) {
 

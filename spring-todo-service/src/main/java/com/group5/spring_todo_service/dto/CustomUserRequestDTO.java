@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record CustomUserRegistrationDTO(
+public record CustomUserRequestDTO(
         @NotBlank(message = "Email cannot be empty!")
         @Size(min = 5, max = 50)
         @Email
