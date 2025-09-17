@@ -3,7 +3,7 @@
 En webbtjänst byggd i Java Spring Boot som hanterar användare och deras att-göra-uppgifter.
 Systemet har stöd för autentisering, användarroller (USER/ADMIN) samt CRUD-operationer för tasks.
 
-Starta projektet
+### <u>Starta projektet</u> ###
 
 Klona repot:
 
@@ -17,8 +17,7 @@ DB_USER
 DB_PASSWORD
 DB_URL)**
 
-https://spring-todo-service.onrender.com - Render
-
+https://spring-todo-service.onrender.com - Live via Render
 
 Exempel på API-anrop
 Skapa användare
@@ -53,18 +52,21 @@ Headers:
 email: admin@test.se
 password: Admintest1
 
-Reflektion
+---
+**Reflektion**
 
 I detta projekt har vi lärt oss:
 
-Webbtjänster: hur man bygger REST API:er med Spring Boot och hanterar requests/responses.
+* Webbtjänster: hur man bygger REST API:er med Spring Boot och hanterar requests/responses.
 
-Versionshantering: att samarbeta i GitHub, använda branches, commits och pull requests.
+* Versionshantering: att samarbeta i GitHub, använda branches, commits och pull requests.
 
-Samarbete: att utveckla i team och använda GitHub Project och skriva gemensam dokumentation.
+* Samarbete: att utveckla i team och använda GitHub Project och skriva gemensam dokumentation.
 
-God praxis i Java: att strukturera koden med serviceklasser, repositories och DTO:er,
-vilket gör projektet mer modulärt, testbart och lättare att underhålla.
+* God praxis i Java: att strukturera koden med serviceklasser, repositories och DTO:er,
+  vilket gör projektet mer modulärt, testbart och lättare att underhålla.
 
-Databaser: hur man modellerar relationer mellan användare och tasks,
-använder JPA/Hibernate för att interagera med databasen och implementerar CRUD-operationer via repository-lager.
+* Databaser: hur man modellerar relationer mellan användare och tasks,
+  använder JPA/Hibernate för att interagera med databasen och implementerar CRUD-operationer via repository-lager.
+
+---
