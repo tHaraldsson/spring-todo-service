@@ -6,6 +6,7 @@ import com.group5.spring_todo_service.dto.CustomUserResponseDTO;
 import com.group5.spring_todo_service.dto.TaskResponseDTO;
 import com.group5.spring_todo_service.repositories.CustomUserRepository;
 import com.group5.spring_todo_service.models.CustomUser;
+import com.group5.spring_todo_service.util.PasswordUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class CustomUserService {
 
     private final CustomUserRepository customUserRepository;
+
 
     public CustomUserService(CustomUserRepository customUserRepository) {
         this.customUserRepository = customUserRepository;
@@ -49,7 +51,7 @@ public class CustomUserService {
 
     CustomUser savedUser = new CustomUser();
         savedUser.setEmail(dto.email());
-        savedUser.setPassword(dto.password());
+        savedUser.setPassword(PasswordUtil.hashPassword(dto.password()));
         savedUser.setRole("USER");
         savedUser.setTasks(new ArrayList<>());
         return customUserRepository.save(savedUser);
@@ -63,7 +65,7 @@ public class CustomUserService {
 
         CustomUser savedUser = new CustomUser();
         savedUser.setEmail(dto.email());
-        savedUser.setPassword(dto.password());
+        savedUser.setPassword(PasswordUtil.hashPassword(dto.password()));
         savedUser.setRole("ADMIN");
         savedUser.setTasks(new ArrayList<>());
         return customUserRepository.save(savedUser);
@@ -84,7 +86,7 @@ public class CustomUserService {
         }
 
         if (dto.password() != null){
-            user.setPassword(dto.password());
+            user.setPassword(PasswordUtil.hashPassword(dto.password()));
         }
 
         return customUserRepository.save(user);
